@@ -9,6 +9,7 @@ import (
 	"sync"
 	"text/template"
 
+	"github.com/kr/pretty"
 	"github.com/markbates/inflect"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
@@ -30,6 +31,7 @@ type Builder struct {
 
 // Run the builder.
 func (b *Builder) Run() error {
+	pretty.Println("### b.RootPath ->", b.RootPath)
 	wg := &errgroup.Group{}
 	err := filepath.Walk(b.RootPath, func(path string, info os.FileInfo, err error) error {
 		if info == nil {
@@ -79,6 +81,7 @@ func (b *Builder) dump() error {
 }
 
 func (b *Builder) process(root string) error {
+	pretty.Println("### root ->", root)
 	ext := filepath.Ext(root)
 	if ext != ".go" || invalidFilePattern.MatchString(root) {
 		return nil
@@ -108,6 +111,8 @@ func (b *Builder) process(root string) error {
 			continue
 		}
 		wp := filepath.Join(filepath.Dir(root), n)
+		pretty.Println("### wp ->", wp)
+		pretty.Println("### inflect.Name(wp).Package() ->", inflect.Name(wp).Package())
 		bx := &box{
 			Name:     inflect.Name(wp).Package(),
 			Files:    []file{},
