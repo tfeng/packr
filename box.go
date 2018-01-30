@@ -106,6 +106,8 @@ func (b Box) decompress(bb []byte) []byte {
 }
 
 func (b Box) lookupKeys() []string {
+	pretty.Println("### b.callingDir ->", b.callingDir)
+	pretty.Println("### b.Path ->", b.Path)
 	return []string{
 		inflect.Name(filepath.Join(b.callingDir, b.Path)).Package(),
 		b.Path,
