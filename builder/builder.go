@@ -116,8 +116,11 @@ func (b *Builder) process(root string) error {
 		wp := filepath.Join(filepath.Dir(root), n)
 		pretty.Println("### wp ->", wp)
 		pretty.Println("### inflect.Name(wp).Package() ->", inflect.Name(wp).Package())
+		ep := filepath.Join(filepath.Dir(b.RootPath), n)
+		pretty.Println("### ep ->", ep)
+		pretty.Println("### inflect.Name(ep).Package() ->", inflect.Name(ep).Package())
 		bx := &box{
-			Name:     inflect.Name(wp).Package(),
+			Name:     inflect.Name(ep).Package(),
 			Files:    []file{},
 			compress: b.Compress,
 		}
