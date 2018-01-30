@@ -170,6 +170,10 @@ func (b Box) Walk(wf WalkFunc) error {
 	for _, key := range b.lookupKeys() {
 		if data[key] == nil {
 			base := filepath.Join(b.callingDir, b.Path)
+			base, err := filepath.EvalSymlinks(base)
+			if err != nil {
+				return errors.WithStack(err)
+			}
 			return filepath.Walk(base, func(path string, info os.FileInfo, err error) error {
 				shortPath := strings.TrimPrefix(path, base)
 				if info == nil || info.IsDir() {

@@ -2,7 +2,6 @@ package builder
 
 import (
 	"context"
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -33,7 +32,11 @@ type Builder struct {
 func (b *Builder) Run() error {
 	pretty.Println("### b.RootPath ->", b.RootPath)
 	wg := &errgroup.Group{}
-	err := filepath.Walk(b.RootPath, func(path string, info os.FileInfo, err error) error {
+	path, err := filepath.EvalSymlinks(b.RootPath)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if info == nil {
 			return filepath.SkipDir
 		}
@@ -146,10 +149,10 @@ func (b *Builder) addPkg(p pkg) {
 
 // New Builder with a given context and path
 func New(ctx context.Context, path string) *Builder {
-	path, err := filepath.EvalSymlinks(path)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// path, err := filepath.EvalSymlinks(path)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	return &Builder{
 		Context:      ctx,
 		RootPath:     path,
