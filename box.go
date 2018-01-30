@@ -13,6 +13,7 @@ import (
 	"compress/gzip"
 
 	"github.com/gobuffalo/envy"
+	"github.com/kr/pretty"
 	"github.com/markbates/inflect"
 	"github.com/pkg/errors"
 )
@@ -112,19 +113,23 @@ func (b Box) lookupKeys() []string {
 }
 
 func (b Box) find(name string) (File, error) {
+	pretty.Println("### name ->", name)
 	if b.directories == nil {
 		b.indexDirectories()
 	}
 
 	cleanName := filepath.ToSlash(filepath.Clean(name))
+	pretty.Println("### cleanName ->", cleanName)
 	// Ensure name is not outside the box
 	if strings.HasPrefix(cleanName, "../") {
 		return nil, ErrResOutsideBox
 	}
 	// Absolute name is considered as relative to the box root
 	cleanName = strings.TrimPrefix(cleanName, "/")
+	pretty.Println("### cleanName ->", cleanName)
 
 	// Try to get the resource from the box
+	pretty.Println("### b.lookupKeys() ->", b.lookupKeys())
 	for _, key := range b.lookupKeys() {
 		if _, ok := data[key]; ok {
 			if bb, ok := data[key][cleanName]; ok {
