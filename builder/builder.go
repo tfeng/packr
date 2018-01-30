@@ -8,6 +8,7 @@ import (
 	"sync"
 	"text/template"
 
+	"github.com/gobuffalo/envy"
 	"github.com/kr/pretty"
 	"github.com/markbates/inflect"
 	"github.com/pkg/errors"
@@ -32,7 +33,7 @@ type Builder struct {
 func (b *Builder) Run() error {
 	pretty.Println("### b.RootPath ->", b.RootPath)
 	wg := &errgroup.Group{}
-	path, err := filepath.EvalSymlinks(b.RootPath)
+	path, err := filepath.EvalSymlinks(filepath.Join(envy.GoPath(), "src", b.RootPath))
 	if err != nil {
 		return errors.WithStack(err)
 	}

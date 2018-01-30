@@ -6,6 +6,7 @@ import (
 
 	"github.com/gobuffalo/packr/builder"
 	"github.com/kr/pretty"
+	"github.com/markbates/inflect"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +26,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	pwd, _ := os.Getwd()
-	rootCmd.Flags().StringVarP(&input, "input", "i", pwd, "path to scan for packr Boxes")
+	rootCmd.Flags().StringVarP(&input, "input", "i", inflect.Name(pwd).Package(), "path to scan for packr Boxes")
 	rootCmd.Flags().BoolVarP(&compress, "compress", "z", false, "compress box contents")
 }
 
