@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gobuffalo/packr/builder"
+	"github.com/kr/pretty"
 	"github.com/spf13/cobra"
 )
 
@@ -15,6 +16,7 @@ var rootCmd = &cobra.Command{
 	Use:   "packr",
 	Short: "compiles static files into Go files",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		pretty.Println("### input ->", input)
 		b := builder.New(context.Background(), input)
 		b.Compress = compress
 		return b.Run()
